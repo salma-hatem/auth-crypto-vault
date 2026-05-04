@@ -48,7 +48,27 @@ def CTR_decrypt(input_cipher, key):
 
         text_block = xor(block, keystream)
         plaintext += text_block
-        
+
         counter += 1
 
     return plaintext
+
+
+def ctr_encrypt_with_nonce(plaintext, key, nonce):
+    if len(nonce) != 12:
+        raise ValueError("CTR nonce must be 12 bytes")
+    blocks = split_16_bytes(plaintext)
+    counter = 0
+    ciphertext = b""
+    for block in blocks:
+        counter_block = nonce + counter.to_bytes(4, 'big')
+        keystream = AES_encrypt(counter_block, key)
+        ciphertext += xor(block, keystream)
+        counter += 1
+        if counter >= 2 ** 32:
+            raise OverflowError("CTR counter overflow")
+    return ciphertext
+
+
+def ctr_decrypt_with_nonce(ciphertext, key, nonce):
+    return ctr_encrypt_with_nonce(ciphertext, key, nonce)
