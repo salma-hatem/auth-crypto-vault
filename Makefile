@@ -32,6 +32,7 @@ demo-tamper: build
 	$(PYTHON) bench/demo_tamper.py
 
 gui: build
+	$(PYTHON) -m pip install -r requirements.txt --quiet
 	$(PYTHON) gui/server.py
 
 clean:

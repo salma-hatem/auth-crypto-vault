@@ -1,7 +1,6 @@
 // Tamper Demo Panel — bit flips → HMAC rejection
 
 const { useState: useStateT, useEffect: useEffectT, useRef: useRefT, useMemo: useMemoT } = React;
-const useMemo = useMemoT;
 
 function TamperScreen() {
   // Build a fixed visualization blob: 16 salt + 12 nonce + 96 ciphertext + 64 tag = 188 bytes shown in a grid

@@ -1,6 +1,6 @@
 // Benchmark screen — calls /api/benchmark (real V1 vs V2 Python timing)
 
-const { useState: useStateB, useEffect: useEffectB, useRef: useRefB } = React;
+const { useState: useStateB, useEffect: useEffectB } = React;
 
 function BenchmarkScreen() {
   const [size, setSize] = useStateB(1);

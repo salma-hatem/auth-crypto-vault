@@ -38,6 +38,27 @@ tests/                NIST + RFC test vectors, vault roundtrip, tamper.
 bench/                5 MB V1-vs-V2 benchmark, bit-flip demo.
 ```
 
+## GUI
+
+An interactive browser interface for the vault — five screens:
+**Encrypt**, **Decrypt**, **Internals** (live KDF + NIST KATs), **Benchmark**, and **Tamper Demo**.
+
+```bash
+make build   # compile the C extension (optional — enables the fast V2 backend)
+make gui     # installs Flask, then opens http://127.0.0.1:5000
+```
+
+`make gui` automatically installs Flask via pip if it is not already present.
+If you prefer to manage dependencies manually:
+
+```bash
+pip install flask
+python gui/server.py
+```
+
+The GUI serves the React frontend from `gui/static/` via a local Flask server.
+All cryptography runs in the same Python process — no external crypto library is used.
+
 ## Build
 
 ```

@@ -31,21 +31,6 @@ function formatBytes(n) {
   return (n / (1024 * 1024)).toFixed(2) + ' MB';
 }
 
-// Decode base64 and trigger a browser download
-function downloadB64(b64, filename) {
-  const binary = atob(b64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const url = URL.createObjectURL(new Blob([bytes]));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename || 'download';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 // ---------- Icons (tiny inline SVGs) ----------
 function Icon({ name, size = 16, color = 'currentColor' }) {
   const props = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' };
@@ -258,5 +243,5 @@ function Pipeline({ steps, current, results }) {
 // expose to all screens
 Object.assign(window, {
   Icon, BackendSwitch, DropZone, PasswordInput, BlobAnatomy, HexStream, Pipeline,
-  randHex, trueRandHex, truncHex, formatBytes, downloadB64,
+  randHex, trueRandHex, truncHex, formatBytes,
 });

@@ -1,6 +1,6 @@
 // Encrypt screen — calls /api/encrypt
 
-const { useState: useStateE, useEffect: useEffectE, useRef: useRefE } = React;
+const { useState: useStateE, useEffect: useEffectE } = React;
 
 function EncryptScreen({ backend }) {
   const [file, setFile] = useStateE(null);
