@@ -64,7 +64,11 @@ function EncryptScreen({ backend }) {
       const resp = await fetchPromise;
       data = await resp.json();
     } catch (e) {
-      setStatus({ kind: 'err', title: 'Network error', body: String(e) });
+      setStatus({
+        kind: 'err',
+        title: 'Cannot reach the server',
+        body: 'Make sure the server is running:  python gui/server.py\n\n(' + String(e) + ')',
+      });
       setRunning(false);
       return;
     }
@@ -75,14 +79,14 @@ function EncryptScreen({ backend }) {
         const nr = [...r];
         nr[0] = data.salt;
         nr[2] = data.nonce;
-        nr[3] = '0x' + data.ciphertext.slice(0, 24) + '…';
+        nr[3] = '0x' + data.ciphertext_preview + (data.plain_size > 64 ? '…' : '');
         nr[4] = data.tag.slice(0, 32) + '…';
         return nr;
       });
       setBlob({
         salt: data.salt,
         nonce: data.nonce,
-        ciphertext: data.ciphertext,
+        ciphertext: data.ciphertext_preview + (data.plain_size > 64 ? '…' : ''),
         tag: data.tag,
         plainSize: data.plain_size,
       });
@@ -91,7 +95,13 @@ function EncryptScreen({ backend }) {
         title: 'Encryption successful',
         body: `${formatBytes(data.blob_size)} vault blob ready — downloading as "${outName}"`,
       });
-      downloadB64(data.blob_b64, outName);
+      // download via direct link (no base64 in memory — works for any file size)
+      const a = document.createElement('a');
+      a.href = `/api/download/${data.download_token}`;
+      a.download = outName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } else {
       setStatus({ kind: 'err', title: 'Encryption failed', body: data.error });
     }

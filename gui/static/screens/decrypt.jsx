@@ -61,7 +61,11 @@ function DecryptScreen({ backend }) {
       const resp = await fetch('/api/decrypt', { method: 'POST', body: fd });
       data = await resp.json();
     } catch (e) {
-      setStatus({ kind: 'err', title: 'Network error', body: String(e) });
+      setStatus({
+        kind: 'err',
+        title: 'Cannot reach the server',
+        body: 'Make sure the server is running:  python gui/server.py\n\n(' + String(e) + ')',
+      });
       setRunning(false);
       return;
     }
@@ -78,7 +82,13 @@ function DecryptScreen({ backend }) {
           title: 'Decryption successful',
           body: `Recovered ${formatBytes(data.plain_size)} — downloading as "${outName}"`,
         });
-        downloadB64(data.plaintext_b64, outName);
+        // download via direct link (no base64 in memory)
+        const a = document.createElement('a');
+        a.href = `/api/download/${data.download_token}`;
+        a.download = outName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         setRunning(false);
       }, 700);
     } else {
