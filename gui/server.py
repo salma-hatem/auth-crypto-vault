@@ -60,6 +60,11 @@ def static_files(path):
 
 # ── File download (one-time token) ────────────────────────────────────────────
 
+@app.route('/api/ping')
+def api_ping():
+    return jsonify({'ok': True, 'v2_backend': V2_BACKEND})
+
+
 @app.route('/api/download/<token>')
 def api_download(token):
     data = _pending_downloads.pop(token, None)
@@ -295,6 +300,6 @@ if __name__ == '__main__':
         webbrowser.open(url)
     except Exception:
         pass
-    # Listen on all IPv4 interfaces (0.0.0.0) so the browser finds the server
-    # regardless of whether 'localhost' resolves to 127.0.0.1 or ::1.
-    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
+    # Bind to '::' for dual-stack: answers on both 127.0.0.1 (IPv4) and ::1
+    # (IPv6), so fetch() works regardless of how the browser resolves 'localhost'.
+    app.run(host='::', port=port, debug=False, threaded=True)
