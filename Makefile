@@ -1,4 +1,4 @@
-.PHONY: build test bench demo demo-tamper clean help
+.PHONY: build test bench demo demo-tamper gui clean help
 
 PYTHON ?= python3
 NATIVE_DIR := aes_v2/native
@@ -11,6 +11,7 @@ help:
 	@echo "  demo          - ~10 s end-to-end demo (NIST + V1/V2 timing + tamper)"
 	@echo "  bench         - full 5 MB V1 vs V2 benchmark (slow: V1 takes minutes)"
 	@echo "  demo-tamper   - just the bit-flip tamper-rejection script"
+	@echo "  gui           - launch the browser GUI (requires: pip install flask)"
 	@echo "  clean         - remove build artifacts"
 
 build: $(NATIVE_LIB)
@@ -29,6 +30,9 @@ bench: build
 
 demo-tamper: build
 	$(PYTHON) bench/demo_tamper.py
+
+gui: build
+	$(PYTHON) gui/server.py
 
 clean:
 	$(MAKE) -C $(NATIVE_DIR) clean
